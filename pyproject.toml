@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "texutils"
+version = "0.1.0"
+description = "A Library to work with LaTeX files"
+authors = ["MrQuentinet <quentinvilluis@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
