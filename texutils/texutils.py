@@ -2,6 +2,9 @@ import tempfile
 import os
 import subprocess
 
+import jinja2
+
+
 class TeXUtils:
     def __init__(self, tex_src, job_name: str, dir_name: str = ''):
         self.tex = tex_src
@@ -21,7 +24,24 @@ class TeXUtils:
     def from_binary_string(cls, binstr, jobname: str, dir_name: str = None):
         return cls(binstr, jobname, dir_name)
 
-    def create_pdf(self, keep_pdf: bool = False, keep_log: bool = False, env: dict = None):
+    @classmethod
+    def from_jinja_template_file(cls, filename, env: jinja2.Environment = None, **render_kwargs):
+        dir_name = os.path.dirname(filename)
+        prefix = os.path.basename(filename)
+        prefix = os.path.splitext(prefix)[0]
+
+        if env is None:
+            env = jinja2.Environment(loader=jinja2.FileSystemLoader(dir_name), autoescape=jinja2.select_autoescape())
+
+        template = env.get_template(filename)
+        cls.from_jinja_template(template, prefix, dir_name, **render_kwargs)
+
+    @classmethod
+    def from_jinja_template(cls, template: jinja2.Template, jobname: str, dir_name: str = None, **render_kwargs):
+        tex_src = template.render(**render_kwargs)
+        return cls(tex_src, jobname, dir_name)
+
+    def create_pdf(self):
         args = self.get_args()
         subprocess.run(['pdflatex', *args], input=self.tex)
 
