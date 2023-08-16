@@ -25,13 +25,12 @@ class TeXUtils:
         return cls(binstr, jobname, dir_name)
 
     @classmethod
-    def from_jinja_template_file(cls, filename, env: jinja2.Environment = None, **render_kwargs):
+    def from_jinja_template_file(cls, filename, **render_kwargs):
         dir_name = os.path.dirname(filename)
         prefix = os.path.basename(filename)
         prefix = os.path.splitext(prefix)[0]
 
-        if env is None:
-            env = jinja2.Environment(loader=jinja2.FileSystemLoader(dir_name), autoescape=jinja2.select_autoescape())
+        env = jinja2.Environment(loader=jinja2.FileSystemLoader(dir_name), autoescape=jinja2.select_autoescape())
 
         template = env.get_template(filename)
         cls.from_jinja_template(template, prefix, dir_name, **render_kwargs)
