@@ -33,7 +33,9 @@ jobs:
           installer-parallel: true
 
       - name: Install pdflatex
-        run: sudo apt-get install texlive-latex-base
+        run: |
+          sudo apt-get update
+          sudo apt-get install texlive-full
 
       - name: Install project
         run: poetry install --no-interaction
